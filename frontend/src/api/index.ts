@@ -10,7 +10,7 @@ const apiInstance = axios.create({
 // Interceptor to set auth header with user token
 apiInstance.interceptors.request.use(
     (config) => {
-        const token = localStorage.get("token");
+        const token = L localStorage.get("token");
         config.headers.Authorization = `Bearer ${token}`;
         return config;
     },
@@ -21,20 +21,36 @@ apiInstance.interceptors.request.use(
 
 //
 
-const login = (data: { username: string; password: string }) => {
-    return apiInstance.post("/users/login", data);
+const login = async (data: { email: string; password: string }) => {
+    return await apiInstance.post("/auth/login", data);
 };
 
-const signup = (data: {
+const googleLogin = async (codeResponse: any) => {
+    // const res = await axios
+    //     .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`, {
+    //         headers: {
+    //             Authorization: `Bearer ${access_token}`,
+    //             Accept: 'application/json'
+    //         }
+    //     })
+    // console.log('google data', res)
+    const res = await axios.post('/auth/google', {
+        codeResponse,
+    });
+
+    return res;
+}
+
+const signup = async (data: {
     email: string;
     password: string;
     username: string;
 }) => {
-    return apiInstance.post("/users/register", data);
+    return await apiInstance.post("/users/register", data);
 };
 
-const logout = () => {
-    return apiInstance.post("/users/logout");
+const logout = async () => {
+    return await apiInstance.post("/users/logout");
 };
 
 /*
@@ -122,6 +138,7 @@ const api = {
     signup,
     login,
     logout,
+    googleLogin
 }
 
 export default api;

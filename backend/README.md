@@ -11,6 +11,7 @@ bun install
 docker pull redis
 docker run --name wow_redis -itd -p 6379:6379 redis
 docker stop wow_redis
+docker start wow_redis
 ```
 4. Env file setup ([.env](backend/.env))
 

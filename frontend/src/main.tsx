@@ -4,13 +4,16 @@ import App from '@/App.tsx'
 import '@/index.css'
 import SocketProvider from '@/context/SocketProvider.tsx'
 import { BrowserRouter } from 'react-router-dom'
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <BrowserRouter>
-            <SocketProvider>
-                <App />
-            </SocketProvider>
-        </BrowserRouter>
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
+            <BrowserRouter>
+                <SocketProvider>
+                    <App />
+                </SocketProvider>
+            </BrowserRouter>
+        </GoogleOAuthProvider >
     </React.StrictMode>,
 )

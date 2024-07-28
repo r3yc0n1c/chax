@@ -6,6 +6,7 @@ import cors from "cors";
 
 import morganMiddleware from './config/morgan';
 import SocketService from './services/socket.service';
+import routes from './routes';
 
 
 const authLimiter = rateLimit({
@@ -16,6 +17,7 @@ const authLimiter = rateLimit({
 
 const app = express();
 
+// configure express app
 app.use(cors())
     .use(xss())
     .use(helmet())
@@ -24,12 +26,15 @@ app.use(cors())
     .use(morganMiddleware)
     .use(express.urlencoded({ extended: true }));
 
-// app.use("/v1", routes);
+// add diff. endpoints
+app.use("/", routes);
 
+// start express server
 const expressServer = app.listen(5000, () => {
     console.log("listening on *:5000");
 });
 
+// start socket server
 const socketService = new SocketService(expressServer, {
     cors: {
         origin: "*",
@@ -37,4 +42,5 @@ const socketService = new SocketService(expressServer, {
     }
 });
 
+// init all socket listeners
 socketService.intiListeners();

@@ -7,6 +7,11 @@ import config from "../config/config";
 const pub = new Redis(config.redis);
 const sub = new Redis(config.redis);
 
+pub.on("error", err => {
+    console.log('Redis conn. error', err)
+    process.exit(1);
+})
+
 class SocketService {
     private _io: Server;
 
