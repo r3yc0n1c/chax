@@ -1,3 +1,4 @@
+import { LocalStorage } from "@/lib/utils";
 import axios from "axios";
 
 // Axios instance
@@ -10,7 +11,8 @@ const apiInstance = axios.create({
 // Interceptor to set auth header with user token
 apiInstance.interceptors.request.use(
     (config) => {
-        const token = L localStorage.get("token");
+        const token = LocalStorage.get("token");
+        console.log('token', token)
         config.headers.Authorization = `Bearer ${token}`;
         return config;
     },
@@ -22,23 +24,12 @@ apiInstance.interceptors.request.use(
 //
 
 const login = async (data: { email: string; password: string }) => {
+    console.log('login@api', data)
     return await apiInstance.post("/auth/login", data);
 };
 
-const googleLogin = async (codeResponse: any) => {
-    // const res = await axios
-    //     .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`, {
-    //         headers: {
-    //             Authorization: `Bearer ${access_token}`,
-    //             Accept: 'application/json'
-    //         }
-    //     })
-    // console.log('google data', res)
-    const res = await axios.post('/auth/google', {
-        codeResponse,
-    });
-
-    return res;
+const googleLogin = async (code: string) => {
+    return await apiInstance.post('/auth/google', { code });
 }
 
 const signup = async (data: {
@@ -46,11 +37,15 @@ const signup = async (data: {
     password: string;
     username: string;
 }) => {
-    return await apiInstance.post("/users/register", data);
+    return await apiInstance.post("/auth/signup", data);
+};
+
+const googleSignup = async (code: string) => {
+    return await apiInstance.post('/auth/google/signup', { code });
 };
 
 const logout = async () => {
-    return await apiInstance.post("/users/logout");
+    return await apiInstance.post("/auth/logout");
 };
 
 /*
@@ -138,7 +133,8 @@ const api = {
     signup,
     login,
     logout,
-    googleLogin
+    googleLogin,
+    googleSignup
 }
 
 export default api;

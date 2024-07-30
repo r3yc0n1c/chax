@@ -10,6 +10,8 @@ const envSchemma = joi
         PORT: joi.number().default(5000).description("server port"),
         REDIS_HOST: joi.string().required().description("Redis host"),
         REDIS_PORT: joi.number().default(6379).description("Redis port"),
+        GOOGLE_CLIENT_ID: joi.string().required().description("Google Client ID"),
+        GOOGLE_CLIENT_SECRET: joi.string().required().description("Google Client Secret"),
     })
     .unknown();
 
@@ -28,4 +30,8 @@ export default {
         host: envVars.REDIS_HOST,
         port: envVars.REDIS_PORT,
     },
+    googleAuth: {
+        clientId: envVars.GOOGLE_CLIENT_ID,
+        clientSecret: envVars.GOOGLE_CLIENT_SECRET
+    }
 };

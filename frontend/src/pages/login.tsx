@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthProvider";
-import { useState } from "react";
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
-import api from "@/api";
+import { useGoogleLogin } from '@react-oauth/google';
 
 interface Inputs {
 	email: string;
@@ -14,32 +12,20 @@ interface Inputs {
 }
 
 const LoginPage = () => {
-	// const { login, googleLogin } = useAuth();
+	const { login, googleLogin } = useAuth();
 	
 	const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 	const onSubmit: SubmitHandler<Inputs> = async (data) => {
 		console.log('login data', data);
-		// await login(data);
-		console.log('api called', await api.login(data));
+		await login(data);
+		
+		// toast
 	}
-
-
-	const responseMessage = (response) => {
-		console.log('google login successful', response);
-		// const access_token = response.credential;
-		// googleLogin(access_token);
-	};
-
-	const errorMessage = () => {
-		console.log('google login failed');
-	};
 
 	const tryGoogleLogin = useGoogleLogin({
 		onSuccess: async (codeResponse) => {
 			console.log(codeResponse)
-			// await googleLogin(codeResponse)
-			// await login({ username: 'asd', password: 'qw' });
-			// await api.googleLogin(codeResponse);
+			await googleLogin(codeResponse.code);
 		},
 		onError: (error) => console.log('Login Failed:', error),
 		flow: 'auth-code',
@@ -123,7 +109,7 @@ const LoginPage = () => {
 					</form>
 					<div className="mt-4 text-center text-sm">
 						Don&apos;t have an account?{" "}
-						<Link to="#" className="underline">
+						<Link to="/signup" className="underline">
 							Sign up
 						</Link>
 					</div>

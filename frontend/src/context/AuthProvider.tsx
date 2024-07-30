@@ -4,6 +4,7 @@ import api from "@/api";
 import type { User } from "@/types/user";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { LocalStorage } from "@/lib/utils";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 interface AuthProviderProps {
     children?: React.ReactNode;
@@ -24,14 +25,16 @@ const AuthContext = React.createContext<{
     user: User | null;
     token: string | null;
     login: (data: LoginProps) => Promise<void>;
-    googleLogin: (codeResponse: any) => Promise<void>;
+    googleLogin: (code: string) => Promise<void>;
+    googleSignup: (code: string) => Promise<void>;
     signup: (data: SignUpProps) => Promise<void>;
     logout: () => Promise<void>;
 }>({
     user: null,
     token: null,
     login: async () => { },
-    googleLogin: async () => {},
+    googleLogin: async () => { },
+    googleSignup: async () => { },
     signup: async () => { },
     logout: async () => { },
 });
@@ -68,18 +71,17 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }
 
-    const googleLogin = async (codeResponse: any) => {
+    const googleLogin = async (code: string) => {
         setIsLoading(true);
 
         try {
-            const res = await api.googleLogin(codeResponse);
-            console.log('google data', res)
-            // const { data } = res;
-            // setUser(res.data.user);
-            // setToken(res.data.accessToken);
+            const res = await api.googleLogin(code);
 
-            // LocalStorage.setItem("user", res.data);
-            // LocalStorage.setItem("token", res.data.accessToken);
+            setUser(res.data.user);
+            setToken(res.data.accessToken);
+
+            LocalStorage.set("user", res.data);
+            LocalStorage.set("token", res.data.accessToken);
 
             navigate("/chat");
         } catch (err) {
@@ -98,6 +100,28 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
             await api.signup(data);
             navigate("/login");
+        } catch (err) {
+            // toast
+            console.error(err);
+        } finally {
+            // toast
+            setIsLoading(false);
+        }
+    }
+
+    const googleSignup = async (code: string) => {
+        setIsLoading(true);
+
+        try {
+            const res = await api.googleLogin(code);
+
+            setUser(res.data.user);
+            setToken(res.data.accessToken);
+
+            LocalStorage.set("user", res.data);
+            LocalStorage.set("token", res.data.accessToken);
+
+            navigate("/chat");
         } catch (err) {
             // toast
             console.error(err);
@@ -141,8 +165,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // Provide auth data through the context
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, googleLogin, token }}>
-            {isLoading ? <LoadingSpinner /> : children}
+        <AuthContext.Provider value={{ user, login, signup, logout, googleLogin, googleSignup, token }}>
+            <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
+                {isLoading ? <LoadingSpinner /> : children}
+            </GoogleOAuthProvider >
         </AuthContext.Provider>
     );
 };

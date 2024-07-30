@@ -7,18 +7,27 @@ import cors from "cors";
 import morganMiddleware from './config/morgan';
 import SocketService from './services/socket.service';
 import routes from './routes';
+import redisClient from './config/redis';
 
 
+// api rate limitter configuration
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 20,
     skipSuccessfulRequests: true,
 });
 
+// CORS configs
+const corsConfig = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+};
+
+// init Express app
 const app = express();
 
 // configure express app
-app.use(cors())
+app.use(cors(corsConfig))
     .use(xss())
     .use(helmet())
     .use(express.json())
@@ -26,8 +35,10 @@ app.use(cors())
     .use(morganMiddleware)
     .use(express.urlencoded({ extended: true }));
 
-// add diff. endpoints
+// add all the endpoints
 app.use("/", routes);
+
+redisClient.connect();
 
 // start express server
 const expressServer = app.listen(5000, () => {

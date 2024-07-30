@@ -6,16 +6,20 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "axios": "^1.7.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.4.0",
+    "google-auth-library": "^9.12.0",
     "helmet": "^7.1.0",
     "http-status": "^1.7.4",
     "ioredis": "^5.4.1",
     "joi": "^17.13.3",
     "morgan": "^1.10.0",
+    "nanoid": "^5.0.7",
+    "redis": "^4.7.0",
     "socket.io": "^4.7.5",
     "winston": "^3.13.1",
     "xss-clean": "^0.1.4"
