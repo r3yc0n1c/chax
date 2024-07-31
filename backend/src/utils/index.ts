@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 
 const generateUserId = (length = 21) => {
     const id = nanoid(length);
-    return `user${id}`;
+    return id;
 }
 
 const avatarGenerator = (userId: string) => {

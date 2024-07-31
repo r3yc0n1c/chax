@@ -156,7 +156,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsLoading(true);
         const _token = LocalStorage.get("token");
         const _user = LocalStorage.get("user");
-        if (_token && _user?._id) {
+        if (_token && _user?.id) {
             setUser(_user);
             setToken(_token);
         }

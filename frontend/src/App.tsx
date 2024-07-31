@@ -13,7 +13,7 @@ const App = () => {
 	return (
 		<Routes>
 			<Route path="/" element={
-				token && user?._id ? (
+				token && user?.id ? (
 					<Navigate to="/chat" />
 				) : (
 					<Navigate to="/login" />

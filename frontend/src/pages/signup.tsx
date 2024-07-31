@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthProvider";
 import { useState } from "react";
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import api from "@/api";
+import GoogleIcon  from '/google.svg';
 
 interface Inputs {
 	username: string;
@@ -129,9 +130,12 @@ const SignUpPage = () => {
 						{/* <Button variant="outline" className="w-full">
 							Login with Google
 						</Button> */}
-						{/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
-						<button type="button" onClick={() => tryGoogleSignUp()} className="w-full">
-							Sign up with Google
+						{/* <GoogleLogin onSuccess={()=>1} onError={()=>1} type="standard"  size="large" shape="rectangular"  width="350" logo_alignment="left"/> */}
+						<button type="button" onClick={() => tryGoogleSignUp()} className="w-full flex justify-evenly">
+						<div>
+							<img src={GoogleIcon} width={32} alt='gicon'/> 
+							</div>
+							<div>Sign up with Google</div>
 						</button>
 					</form>
 					<div className="mt-4 text-center text-sm">

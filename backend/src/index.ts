@@ -31,7 +31,7 @@ app.use(cors(corsConfig))
     .use(xss())
     .use(helmet())
     .use(express.json())
-    .use(authLimiter)
+    // .use(authLimiter)
     .use(morganMiddleware)
     .use(express.urlencoded({ extended: true }));
 

@@ -6,7 +6,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     const { token, user } = useAuth();
 
     // redirect to /login if user is not logged in
-    if (!token || !user?._id)
+    if (!token || !user?.id)
         return <Navigate to="/login" replace />;
 
     return children;

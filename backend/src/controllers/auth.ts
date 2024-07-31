@@ -37,22 +37,35 @@ const Signup = async (req: Request, res: Response) => {
     // save user
     const { email, username, password } = req.body;
 
-    const userId = utils.generateUserId();
+    const id = utils.generateUserId();
+    const userId = `user:${id}`;
+    const avatarURL = utils.avatarGenerator(id);
 
     const existingUser = await redisClient.hGetAll(userId);
+    console.log('eu', existingUser)
 
-    // if(!)
+    if (Object.keys(existingUser).length === 0) {
+        const user = {
+            id,
+            email,
+            username,
+            password,
+            avatarURL
+        };
+        await redisClient.hSet(userId, user);
 
+        res.status(200).json({ user, accessToken: "1234" })
+    }
 
-    console.log(req.body)
-    console.log(req.get("host"))
+    console.log('rb', req.body)
+    // console.log(req.get("host"))
 
-    res.status(200).json({ user: { _id: "id123" }, accessToken: "1234" })
+    res.status(200).json({ user: { id: "id123" }, accessToken: "1234" })
 }
 
 const GoogleSignup = async (req: Request, res: Response) => {
     const { tokens } = await googleOAuth2Client.getToken(req.body.code);
-    const {data} = await getGoogleUserData(tokens.access_token);
+    const { data } = await getGoogleUserData(tokens.access_token);
 
     const user = {
         _id: "asdbascaskcnjsacajks",
